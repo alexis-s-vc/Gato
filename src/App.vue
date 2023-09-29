@@ -47,8 +47,9 @@ const ResetGame = () => {
 
 <template>
 	<main class="pt-8 text-center">
-		<h1 class="mb-8 text-3xl font-bold uppercase">Tic Tac Toe</h1>
+		<h1 class="mb-8 text-3xl font-bold uppercase">GATO (TIC TAC TOE)</h1>
 
+		<h3 class="text-xl mb-4">TURNO JUGADOR {{ player }}</h3>
 
 		<div class="flex flex-col items-center mb-8">
 			<div 
@@ -59,15 +60,22 @@ const ResetGame = () => {
 					v-for="(cell, y) in row" 
 					:key="y" 
 					@click="MakeMove(x, y)" 
-					:class="`border border-magenta w-24 h-24 hover:bg-gray-700 flex items-center justify-center material-icons-outlined text-4xl cursor-pointer ${cell === 'X' ? 'text-pink-500' : 'text-blue-400'}`">
+					:class="`border border-white w-24 h-24 hover:bg-gray-700 flex items-center justify-center material-icons-outlined text-4xl cursor-pointer ${cell === 'X' ? 'text-pink-500' : 'text-blue-400'}`">
 					{{ cell === 'X' ? 'X' : cell === 'O' ? 'O' : '' }}
 				</div>
 			</div>
 		</div>
 
 		<div class="text-center">
-			<button @click="ResetGame" class="px-4 py-2 bg-pink-500 rounded uppercase font-bold hover:bg-pink-600 duration-300">Reset</button>
+			<h2 v-if="winner" class="text-6xl font-bold mb-8">JUGADOR '{{ winner }}' GANA!</h2>
+			<button @click="ResetGame" class="p1-4 py-2 bg-pink-500 rounded uppercase font-bold hover:bg-pink-600 duration-300">REINICIAR</button>
 		</div>
 	</main>
 </template>
+
+<style>
+body {
+	@apply bg-gray-800 text-white;
+}
+</style>
 
