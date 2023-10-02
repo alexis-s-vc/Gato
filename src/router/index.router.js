@@ -5,12 +5,17 @@ const router = createRouter({
     routes: [
 		{
 		 path: "/:catchAll(.*)",
-		redirect: { name: "TicTacToe" },
+		redirect: { name: "Home" },
+        },
+        {
+            path: '/tic-tac-toe',
+            name: 'TicTacToe',
+            component: () => import('../components/TicTacToe.vue'),
         },
         {
             path: '/',
-            name: 'TicTacToe',
-            component: () => import('../components/TicTacToe.vue'),
+            name: 'Home',
+            component: () => {},
         },
     ]
 })
