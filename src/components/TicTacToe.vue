@@ -1,6 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
-
+import { ref, computed, watch } from 'vue'
 
 const player = ref('X')
 const board = ref([
@@ -9,13 +8,17 @@ const board = ref([
   ['', '', '']
 ])
 
+let winningCells = [] 
+
 const CalculateWinner = (board) => {
   const lines = [[0, 1, 2],[3, 4, 5],[6, 7, 8],[0, 3, 6],[1, 4, 7],[2, 5, 8],[0, 4, 8],[2, 4, 6]]
+  winningCells = [] 
 
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i]
 
     if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+      winningCells = [a, b, c]
       return board[a]
     }
   }
@@ -32,6 +35,10 @@ const MakeMove = (x, y) => {
 
 	board.value[x][y] = player.value
 
+	if (CalculateWinner(board.value.flat())) {
+	  winningCells = [a, b,c]
+	}
+
 	player.value = player.value === 'X' ? 'O' : 'X'
 }
 
@@ -42,8 +49,8 @@ const ResetGame = () => {
 		['', '', '']
 	]
 	player.value = 'X'
+	winningCells = [] 
 }
-
 </script>
 
 <template>
@@ -61,7 +68,11 @@ const ResetGame = () => {
 					v-for="(cell, y) in row" 
 					:key="y" 
 					@click="MakeMove(x, y)" 
-					:class="`border border-white w-24 h-24 hover:bg-gray-700 flex items-center justify-center material-icons-outlined text-4xl cursor-pointer ${cell === 'X' ? 'text-pink-500' : 'text-blue-400'}`">
+					:class="[
+						'border border-white w-24 h-24 hover:bg-gray-700 flex items-center justify-center material-icons-outlined text-4xl cursor-pointer',
+						cell === 'X' ? 'text-pink-500' : 'text-blue-400',
+						winningCells.includes(x * 3 + y) ? 'bg-green-500' : ''
+					]">
 					{{ cell === 'X' ? 'X' : cell === 'O' ? 'O' : '' }}
 				</div>
 			</div>
@@ -69,13 +80,18 @@ const ResetGame = () => {
 
 		<div class="text-center">
 			<h2 v-if="winner" class="text-6xl font-bold mb-8">JUGADOR '{{ winner }}' GANA!</h2>
-			<button @click="ResetGame" class="p1-4 py-2 bg-pink-500 rounded uppercase font-bold hover:bg-pink-600 duration-300">REINICIAR</button>
+			<button @click="ResetGame" class="p1-4 py-2 bg-pink-500 rounded uppercase font-bold hover:bg-pink-600 duration-300" style="margin:1rem; padding:2rem"> REINICIAR </button>
+			<router-link to="/introduccion" class="p1-4 py-2 bg-pink-500 rounded uppercase font-bold hover:bg-pink-600 duration-300" style="margin:1rem; padding:2rem"> REGRESAR </router-link>
 		</div>
 	</main>
 </template>
 
-<style scoped>
+<style>
 body {
 	@apply bg-gray-800 text-white;
+}
+
+.bg-green-500 {
+	background-color: rgb(4, 221, 255);
 }
 </style>
